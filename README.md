@@ -3,6 +3,17 @@
 Gophish
 =======
 
+### Special Release: Modified config.json
+This special release of GoPhish has been modified to allow users to edit the "track" and "?rid" verbiage used in GoPhish, to avoid easy fingerprinting of GoPhish servers which causes mail to not be delivered or sent to spam.
+
+Within the GoPhish `config.json` file, there are two parameters (repeated twice, both must be modified to be the same value):
+- Under `Phish_Server`, edit `rid_parameter` and `tracking_parameter`
+- In the common config location, edit `rid_parameter` and `tracking_parameter`
+
+`rid_parameter` is the parameter that goes within the URL to track which users have entered credentials or clicked on a link. This is `?rid` by default in GoPhish, modified to `?empid` in the provided example `config.json`.
+
+`tracking_parameter` is the URL page used in tracking links within HTML emails (https:// yoururl .com / track?rid). `track` is modified by the config file to specify a new page.
+
 ![Build Status](https://github.com/ac3lives/gophish/workflows/CI/badge.svg) [![GoDoc](https://godoc.org/github.com/ac3lives/gophish?status.svg)](https://godoc.org/github.com/ac3lives/gophish)
 
 Gophish: Open-Source Phishing Toolkit
