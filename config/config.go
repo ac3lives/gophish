@@ -23,12 +23,14 @@ type PhishServer struct {
 	UseTLS    bool   `json:"use_tls"`
 	CertPath  string `json:"cert_path"`
 	KeyPath   string `json:"key_path"`
+	RIDParam       string      `json:"rid_parameter"`
+	TrackingParam  string      `json:"tracking_parameter"`
 }
 
 // Config represents the configuration information.
 type Config struct {
 	RIDParam       string      `json:"rid_parameter"`
-	trackingParam  string      `json:"tracking_parameter"`
+	TrackingParam  string      `json:"tracking_parameter"`
 	AdminConf      AdminServer `json:"admin_server"`
 	PhishConf      PhishServer `json:"phish_server"`
 	DBName         string      `json:"db_name"`

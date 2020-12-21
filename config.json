@@ -10,6 +10,8 @@
 		"use_tls": false,
 		"cert_path": "example.crt",
 		"key_path": "example.key"
+		"rid_parameter": "empid",
+		"tracking_parameter": "companylogo",
 	},
 	"rid_parameter": "empid",
 	"tracking_parameter": "companylogo",

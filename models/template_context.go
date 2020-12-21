@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"path"
 	"text/template"
-	"github.com/ac3lives/gophish/config"
 )
 
 // TemplateContext is an interface that allows both campaigns and email
@@ -30,7 +29,7 @@ type PhishingTemplateContext struct {
 
 // NewPhishingTemplateContext returns a populated PhishingTemplateContext,
 // parsing the correct fields from the provided TemplateContext and recipient.
-func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string) (PhishingTemplateContext, error) {
+func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string, ridname string, trackingParam string) (PhishingTemplateContext, error) {
 	f, err := mail.ParseAddress(ctx.getFromAddress())
 	if err != nil {
 		return PhishingTemplateContext{}, err
@@ -55,11 +54,11 @@ func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string
 
 	phishURL, _ := url.Parse(templateURL)
 	q := phishURL.Query()
-	q.Set(RecipientParameter, rid)
+	q.Set(ridname, rid)
 	phishURL.RawQuery = q.Encode()
 
 	trackingURL, _ := url.Parse(templateURL)
-	trackingURL.Path = path.Join(trackingURL.Path, "/" + config.trackingParam)
+	trackingURL.Path = path.Join(trackingURL.Path, "/" + trackingParam)
 	trackingURL.RawQuery = q.Encode()
 
 	return PhishingTemplateContext{
@@ -115,7 +114,7 @@ func ValidateTemplate(text string) error {
 		},
 		RId: "123456",
 	}
-	ptx, err := NewPhishingTemplateContext(vc, td.BaseRecipient, td.RId)
+	ptx, err := NewPhishingTemplateContext(vc, td.BaseRecipient, td.RId, "rid", "track")
 	if err != nil {
 		return err
 	}

@@ -133,7 +133,7 @@ func (s *ModelsSuite) TestEmailRequestURLTemplating(ch *check.C) {
 	err := req.Generate(msg)
 	ch.Assert(err, check.Equals, nil)
 
-	expectedURL := fmt.Sprintf("http://127.0.0.1/%s?%s=%s", req.Email, RecipientParameter, req.RId)
+	expectedURL := fmt.Sprintf("http://127.0.0.1/%s?%s=%s", req.Email, s.config.RIDParam, req.RId)
 
 	msgBuff := &bytes.Buffer{}
 	_, err = msg.WriteTo(msgBuff)

@@ -9,7 +9,7 @@ import (
 
 	"github.com/gophish/gomail"
 	"github.com/ac3lives/gophish/config"
-	log "github.com/gophish/gophish/logger"
+	log "github.com/ac3lives/gophish/logger"
 	"github.com/gophish/gophish/mailer"
 )
 
@@ -105,7 +105,7 @@ func (s *EmailRequest) Generate(msg *gomail.Message) error {
 	}
 	msg.SetAddressHeader("From", f.Address, f.Name)
 
-	ptx, err := NewPhishingTemplateContext(s, s.BaseRecipient, s.RId)
+	ptx, err := NewPhishingTemplateContext(s, s.BaseRecipient, s.RId, conf.RIDParam, conf.TrackingParam)
 	if err != nil {
 		return err
 	}

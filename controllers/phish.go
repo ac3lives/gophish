@@ -12,11 +12,11 @@ import (
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/ac3lives/gophish/config"
-	ctx "github.com/gophish/gophish/context"
-	"github.com/gophish/gophish/controllers/api"
-	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/models"
-	"github.com/gophish/gophish/util"
+	ctx "github.com/ac3lives/gophish/context"
+	"github.com/ac3lives/gophish/controllers/api"
+	log "github.com/ac3lives/gophish/logger"
+	"github.com/ac3lives/gophish/models"
+	"github.com/ac3lives/gophish/util"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jordan-wright/unindexed"
@@ -52,6 +52,7 @@ type PhishingServer struct {
 	server         *http.Server
 	config         config.PhishServer
 	contactAddress string
+	TrackingParam string
 }
 
 // NewPhishingServer returns a new instance of the phishing server with
@@ -110,9 +111,9 @@ func (ps *PhishingServer) registerRoutes() {
 	router := mux.NewRouter()
 	fileServer := http.FileServer(unindexed.Dir("./static/endpoint/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
-	router.HandleFunc("/" + config.trackingParam, ps.TrackHandler)
+	router.HandleFunc("/" + ps.config.TrackingParam, ps.TrackHandler)
 	router.HandleFunc("/robots.txt", ps.RobotsHandler)
-	router.HandleFunc("/{path:.*}/" + config.trackingParam, ps.TrackHandler)
+	router.HandleFunc("/{path:.*}/" + ps.config.TrackingParam, ps.TrackHandler)
 	router.HandleFunc("/{path:.*}/report", ps.ReportHandler)
 	router.HandleFunc("/report", ps.ReportHandler)
 	router.HandleFunc("/{path:.*}", ps.PhishHandler)
@@ -132,7 +133,7 @@ func (ps *PhishingServer) registerRoutes() {
 
 // TrackHandler tracks emails as they are opened, updating the status for the given Result
 func (ps *PhishingServer) TrackHandler(w http.ResponseWriter, r *http.Request) {
-	r, err := setupContext(r)
+	r, err := setupContext(r, ps.config.RIDParam)
 	if err != nil {
 		// Log the error if it wasn't something we can safely ignore
 		if err != ErrInvalidRequest && err != ErrCampaignComplete {
@@ -165,7 +166,7 @@ func (ps *PhishingServer) TrackHandler(w http.ResponseWriter, r *http.Request) {
 
 // ReportHandler tracks emails as they are reported, updating the status for the given Result
 func (ps *PhishingServer) ReportHandler(w http.ResponseWriter, r *http.Request) {
-	r, err := setupContext(r)
+	r, err := setupContext(r, ps.config.RIDParam)
 	w.Header().Set("Access-Control-Allow-Origin", "*") // To allow Chrome extensions (or other pages) to report a campaign without violating CORS
 	if err != nil {
 		// Log the error if it wasn't something we can safely ignore
@@ -200,7 +201,7 @@ func (ps *PhishingServer) ReportHandler(w http.ResponseWriter, r *http.Request) 
 // PhishHandler handles incoming client connections and registers the associated actions performed
 // (such as clicked link, etc.)
 func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
-	r, err := setupContext(r)
+	r, err := setupContext(r, ps.config.RIDParam)
 	if err != nil {
 		// Log the error if it wasn't something we can safely ignore
 		if err != ErrInvalidRequest && err != ErrCampaignComplete {
@@ -213,7 +214,7 @@ func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
 	var ptx models.PhishingTemplateContext
 	// Check for a preview
 	if preview, ok := ctx.Get(r, "result").(models.EmailRequest); ok {
-		ptx, err = models.NewPhishingTemplateContext(&preview, preview.BaseRecipient, preview.RId)
+		ptx, err = models.NewPhishingTemplateContext(&preview, preview.BaseRecipient, preview.RId, ps.config.RIDParam, ps.config.TrackingParam)
 		if err != nil {
 			log.Error(err)
 			http.NotFound(w, r)
@@ -257,7 +258,7 @@ func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
 			log.Error(err)
 		}
 	}
-	ptx, err = models.NewPhishingTemplateContext(&c, rs.BaseRecipient, rs.RId)
+	ptx, err = models.NewPhishingTemplateContext(&c, rs.BaseRecipient, rs.RId, ps.config.RIDParam, ps.config.TrackingParam)
 	if err != nil {
 		log.Error(err)
 		http.NotFound(w, r)
@@ -312,13 +313,13 @@ func (ps *PhishingServer) TransparencyHandler(w http.ResponseWriter, r *http.Req
 
 // setupContext handles some of the administrative work around receiving a new
 // request, such as checking the result ID, the campaign, etc.
-func setupContext(r *http.Request) (*http.Request, error) {
+func setupContext(r *http.Request, ridname string) (*http.Request, error) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Error(err)
 		return r, err
 	}
-	rid := r.Form.Get(models.RecipientParameter)
+	rid := r.Form.Get(ridname)
 	if rid == "" {
 		return r, ErrInvalidRequest
 	}
