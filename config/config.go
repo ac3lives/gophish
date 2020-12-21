@@ -27,6 +27,8 @@ type PhishServer struct {
 
 // Config represents the configuration information.
 type Config struct {
+	RIDParam       string      `json:"rid_parameter"`
+	trackingParam  string      `json:"tracking_parameter"`
 	AdminConf      AdminServer `json:"admin_server"`
 	PhishConf      PhishServer `json:"phish_server"`
 	DBName         string      `json:"db_name"`

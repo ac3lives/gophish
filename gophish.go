@@ -34,7 +34,7 @@ import (
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
-	"github.com/gophish/gophish/config"
+	"github.com/ac3lives/gophish/config"
 	"github.com/gophish/gophish/controllers"
 	"github.com/gophish/gophish/dialer"
 	"github.com/gophish/gophish/imap"

@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"path"
 	"text/template"
+	"github.com/ac3lives/gophish/config"
 )
 
 // TemplateContext is an interface that allows both campaigns and email
@@ -58,7 +59,7 @@ func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string
 	phishURL.RawQuery = q.Encode()
 
 	trackingURL, _ := url.Parse(templateURL)
-	trackingURL.Path = path.Join(trackingURL.Path, "/track")
+	trackingURL.Path = path.Join(trackingURL.Path, "/" + config.trackingParam)
 	trackingURL.RawQuery = q.Encode()
 
 	return PhishingTemplateContext{

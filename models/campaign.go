@@ -8,6 +8,7 @@ import (
 	log "github.com/gophish/gophish/logger"
 	"github.com/gophish/gophish/webhook"
 	"github.com/jinzhu/gorm"
+	"github.com/ac3lives/gophish/config"
 	"github.com/sirupsen/logrus"
 )
 
@@ -127,7 +128,7 @@ var ErrSMTPNotFound = errors.New("Sending profile not found")
 var ErrInvalidSendByDate = errors.New("The launch date must be before the \"send emails by\" date")
 
 // RecipientParameter is the URL parameter that points to the result ID for a recipient.
-const RecipientParameter = "rid"
+const RecipientParameter = config.RIDParam
 
 // Validate checks to make sure there are no invalid fields in a submitted campaign
 func (c *Campaign) Validate() error {

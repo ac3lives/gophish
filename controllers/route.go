@@ -11,7 +11,7 @@ import (
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/gophish/gophish/auth"
-	"github.com/gophish/gophish/config"
+	"github.com/ac3lives/gophish/config"
 	ctx "github.com/gophish/gophish/context"
 	"github.com/gophish/gophish/controllers/api"
 	log "github.com/gophish/gophish/logger"
