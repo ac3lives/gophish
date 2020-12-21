@@ -10,7 +10,7 @@ import (
 	"github.com/gophish/gomail"
 	"github.com/ac3lives/gophish/config"
 	log "github.com/ac3lives/gophish/logger"
-	"github.com/gophish/gophish/mailer"
+	"github.com/ac3lives/gophish/mailer"
 )
 
 // PreviewPrefix is the standard prefix added to the rid parameter when sending

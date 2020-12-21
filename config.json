@@ -9,9 +9,9 @@
 		"listen_url": "0.0.0.0:80",
 		"use_tls": false,
 		"cert_path": "example.crt",
-		"key_path": "example.key"
+		"key_path": "example.key",
 		"rid_parameter": "empid",
-		"tracking_parameter": "companylogo",
+		"tracking_parameter": "companylogo"
 	},
 	"rid_parameter": "empid",
 	"tracking_parameter": "companylogo",

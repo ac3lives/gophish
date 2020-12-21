@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	log "github.com/gophish/gophish/logger"
+	log "github.com/ac3lives/gophish/logger"
 )
 
 const DefaultIMAPFolder = "INBOX"

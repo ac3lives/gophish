@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	ctx "github.com/gophish/gophish/context"
-	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/models"
+	ctx "github.com/ac3lives/gophish/context"
+	log "github.com/ac3lives/gophish/logger"
+	"github.com/ac3lives/gophish/models"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )

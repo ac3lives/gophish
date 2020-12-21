@@ -38,7 +38,7 @@ import (
 	"github.com/ac3lives/gophish/controllers"
 	"github.com/ac3lives/gophish/dialer"
 	"github.com/ac3lives/gophish/imap"
-	log "github.com/gophish/gophish/logger"
+	log "github.com/ac3lives/gophish/logger"
 	"github.com/ac3lives/gophish/middleware"
 	"github.com/ac3lives/gophish/models"
 	"github.com/ac3lives/gophish/webhook"
